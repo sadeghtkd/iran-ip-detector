@@ -1,26 +1,41 @@
-# Iran Public IP List for MikroTik
+# Offline checker that detect an IP address is for Iran or no.
+A Python script to detect IP addresses related to Iran without any external or third party API.
+This repository use a comprehensive list of public IP addresses assigned to Iran.
+I have used the ip list from the following repository:
+https://github.com/Ramtiiin/iran-ip
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/yourusername/yourrepository/blob/main/LICENSE)
+## How its work  
 
-[فارسی](https://github.com/Ramtiiin/iran-ip/blob/main/README.fa.md)
+1. the get_network_info method calculate subnet mask and find the network address for the given ip.
+example :
+```
+IP: 193.141.65.115 → Network: 193.141.64.0/23
+```
+2. The network address searched inside the ip-list.rsc file and return a boolean that indicate the IP is for Iran or not.
 
-This repository provides a comprehensive list of public IP addresses assigned to Iran. The list is in the form of an **ip-list.rsc** file that can be easily imported into Winbox.
+## Sample Usage 
+```
 
-## Usage
+def is_ip_for_iran(ip):
+    # Example usage
+    test_ips = [
+        "193.141.65.182",  # Should give 193.141.64.0/23
+        "192.168.1.1",  # Class C network
+        "10.0.0.1"  # Class A network
+    ]
 
-1. Download the [**ip-list.rsc**](https://github.com/Ramtiiin/iran-ip/blob/main/ip-list.rsc) file from this repository.
-2. Open Winbox and drag the **ip-list.rsc** file into the application.
-3. In the Winbox terminal, type the following command:
-
-```bash
-import ip-list.rsc
+    try:
+        network = get_network_info(ip)
+        print(f"IP: {ip} → Network: {network}")
+        is_ip_in_iran = check_in_ip_list(network)
+        print(f"Is IP {ip} for IRAN: {is_ip_in_iran}")
+        return is_ip_in_iran
+    except ValueError as e:
+        print(f"Error processing {ip}: {e}")
 ```
 
 ## Disclaimer
 Please note that the use of public IP addresses listed in this repository is subject to legal regulations and restrictions. It is your responsibility to ensure compliance with applicable laws and regulations when using these IP addresses. The contributors of this repository do not guarantee the accuracy or availability of these IP addresses and are not liable for any consequences arising from their use.
 
-## Contributing
-**Contributions are welcome!** If you have any suggestions, improvements, or additional IP addresses to add to the list, please feel free to open an issue or submit a pull request.
-
 ## License
-This project is licensed under the [MIT License](https://github.com/yourusername/yourrepository/blob/main/LICENSE). See the LICENSE file for more information.
+This project is licensed under the MIT License.
